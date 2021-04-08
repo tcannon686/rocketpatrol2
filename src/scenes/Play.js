@@ -65,9 +65,17 @@ class Play extends Phaser.Scene {
       game.config.height,
       0xFFFFFF
     ).setOrigin(0, 0)
+
+    /* Define scenes. */
+    keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
+    keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
+    keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
   }
 
   update (t, dt) {
     this.starfield.tilePositionX -= dt * starSpeed
+
+    /* update the rocket. */
+    this.p1Rocket.update(t, dt)
   }
 }

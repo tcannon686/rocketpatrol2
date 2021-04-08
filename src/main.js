@@ -8,3 +8,6 @@ const game = new Phaser.Game({
 const borderUISize = game.config.height / 16
 const borderPadding = borderUISize / 3
 const starSpeed = 0.1
+
+/* Reserve keyboard bindings. */
+let keyF, keyLeft, keyRight

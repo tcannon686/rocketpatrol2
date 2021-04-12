@@ -87,6 +87,7 @@ class Play extends Phaser.Scene {
     ).setOrigin(0, 0)
 
     /* Define scenes. */
+    keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
     keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
     keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
     keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
@@ -116,30 +117,59 @@ class Play extends Phaser.Scene {
       },
       fixedWidth: 100
     }
+
     this.scoreLeft = this.add.text(
       borderUISize + borderPadding,
       borderUISize + borderPadding * 2,
       this.p1Score,
       scoreConfig
     )
+
+    /* Game over flag. */
+    this.gameOver = false
+
+    /* 60-second play clock. */
+    scoreConfig.fixedWidth = 0;
+    this.clock = this.time.delayedCall(60000, () => {
+      this.add.text(
+        game.config.width/2,
+        game.config.height/2,
+        'GAME OVER',
+        scoreConfig
+      ).setOrigin(0.5);
+      this.add.text(
+        game.config.width/2,
+        game.config.height/2 + 64,
+        'Press (R) to Restart',
+        scoreConfig
+      ).setOrigin(0.5);
+      this.gameOver = true
+    }, null, this);
   }
 
   update (t, dt) {
     this.starfield.tilePositionX -= dt * starSpeed
 
-    /* Update the rocket. */
-    this.p1Rocket.update(t, dt)
+    if (!this.gameOver) {
+      /* Update the rocket. */
+      this.p1Rocket.update(t, dt)
 
-    /* Update the spaceships. */
-    this.ships.forEach(x => x.update(t, dt))
+      /* Update the spaceships. */
+      this.ships.forEach(x => x.update(t, dt))
 
-    /* Check collisions. */
-    this.ships.forEach(x => {
-      if (this.checkCollision(this.p1Rocket, x)) {
-        this.p1Rocket.reset()
-        this.shipExplode(x)
-      }
-    })
+      /* Check collisions. */
+      this.ships.forEach(x => {
+        if (this.checkCollision(this.p1Rocket, x)) {
+          this.p1Rocket.reset()
+          this.shipExplode(x)
+        }
+      })
+    }
+
+    /* Restart the scene if R is pressed. */
+    if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
+      this.scene.restart()
+    }
   }
 
   checkCollision (rocket, ship) {

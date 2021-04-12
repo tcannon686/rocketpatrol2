@@ -10,4 +10,4 @@ const borderPadding = borderUISize / 3
 const starSpeed = 0.1
 
 /* Reserve keyboard bindings. */
-let keyF, keyLeft, keyRight
+let keyF, keyLeft, keyRight, keyR

@@ -101,12 +101,33 @@ class Play extends Phaser.Scene {
       }),
       frameRate: 30
     })
+
+    /* Initialize score. */
+    this.p1Score = 0
+    let scoreConfig = {
+      fontFamily: 'Courier',
+      fontSize: '28px',
+      backgroundColor: '#f3b141',
+      color: '#843605',
+      align: 'right',
+      padding: {
+        top: 5,
+        bottom: 5,
+      },
+      fixedWidth: 100
+    }
+    this.scoreLeft = this.add.text(
+      borderUISize + borderPadding,
+      borderUISize + borderPadding * 2,
+      this.p1Score,
+      scoreConfig
+    )
   }
 
   update (t, dt) {
     this.starfield.tilePositionX -= dt * starSpeed
 
-    /* update the rocket. */
+    /* Update the rocket. */
     this.p1Rocket.update(t, dt)
 
     /* Update the spaceships. */
@@ -135,8 +156,8 @@ class Play extends Phaser.Scene {
   shipExplode (ship) {
     /* Temporarily hide the ship. */
     ship.alpha = 0
-    /* Create explosion sprite at the ship's position. */
 
+    /* Create explosion sprite at the ship's position. */
     const boom = this.add.sprite(
       ship.x,
       ship.y,
@@ -148,5 +169,9 @@ class Play extends Phaser.Scene {
       ship.alpha = 1
       boom.destroy()
     })
+
+    /* Add to the player's score. */
+    this.p1Score += ship.points
+    this.scoreLeft.text = this.p1Score
   }
 }

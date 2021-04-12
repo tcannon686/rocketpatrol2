@@ -18,9 +18,9 @@ class Play extends Phaser.Scene {
 
     /* Load audio. */
     this.load
-      .audio('sfx_select', '/assets/blip_select12.wav')
-      .audio('sfx_explosion', '/assets/explosion38.wav')
-      .audio('sfx_rocket', '/assets/rocket_shot.wav')
+      .audio('sfx_select', 'assets/blip_select12.wav')
+      .audio('sfx_explosion', 'assets/explosion38.wav')
+      .audio('sfx_rocket', 'assets/rocket_shot.wav')
   }
 
   create () {

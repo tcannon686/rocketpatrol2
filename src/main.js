@@ -2,7 +2,7 @@ const game = new Phaser.Game({
   type: Phaser.CANVAS,
   width: 640,
   height: 480,
-  scene: [ Play, Menu ]
+  scene: [ Menu, Play ]
 })
 
 const borderUISize = game.config.height / 16

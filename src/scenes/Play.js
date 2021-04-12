@@ -40,10 +40,10 @@ class Play extends Phaser.Scene {
 
     /* Create the spaceships. */
     this.ships = []
-    for (let i = 0; i < 3; i ++) {
+    for (let i = 0; i < 3; i++) {
       this.ships.push(new Spaceship(
         this,
-        game.config.width + borderUISize * (6 -  3 * i),
+        game.config.width + borderUISize * (6 - 3 * i),
         borderUISize * 4 + (borderUISize + borderPadding) * i,
         'spaceship',
         0,
@@ -111,7 +111,7 @@ class Play extends Phaser.Scene {
 
     /* Initialize score. */
     this.p1Score = 0
-    let scoreConfig = {
+    const scoreConfig = {
       fontFamily: 'Courier',
       fontSize: '28px',
       backgroundColor: '#f3b141',
@@ -119,7 +119,7 @@ class Play extends Phaser.Scene {
       align: 'right',
       padding: {
         top: 5,
-        bottom: 5,
+        bottom: 5
       },
       fixedWidth: 100
     }
@@ -135,22 +135,22 @@ class Play extends Phaser.Scene {
     this.gameOver = false
 
     /* 60-second play clock. */
-    scoreConfig.fixedWidth = 0;
+    scoreConfig.fixedWidth = 0
     this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
       this.add.text(
-        game.config.width/2,
-        game.config.height/2,
+        game.config.width / 2,
+        game.config.height / 2,
         'GAME OVER',
         scoreConfig
-      ).setOrigin(0.5);
+      ).setOrigin(0.5)
       this.add.text(
-        game.config.width/2,
-        game.config.height/2 + 64,
+        game.config.width / 2,
+        game.config.height / 2 + 64,
         'Press (R) to Restart or ← for Menu',
         scoreConfig
-      ).setOrigin(0.5);
+      ).setOrigin(0.5)
       this.gameOver = true
-    }, null, this);
+    }, null, this)
   }
 
   update (t, dt) {

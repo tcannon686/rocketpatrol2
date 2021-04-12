@@ -9,12 +9,18 @@ class Play extends Phaser.Scene {
       .image('rocket', 'assets/rocket.png')
       .image('spaceship', 'assets/spaceship.png')
       .image('starfield', 'assets/starfield.png')
-      .spritesheet('explosion', './assets/explosion.png', {
+      .spritesheet('explosion', 'assets/explosion.png', {
         frameWidth: 64,
         frameHeight: 32,
         startFrame: 0,
         endFrame: 9
       })
+
+    /* Load audio. */
+    this.load
+      .audio('sfx_select', '/assets/blip_select12.wav')
+      .audio('sfx_explosion', '/assets/explosion38.wav')
+      .audio('sfx_rocket', '/assets/rocket_shot.wav')
   }
 
   create () {
@@ -199,6 +205,9 @@ class Play extends Phaser.Scene {
       ship.alpha = 1
       boom.destroy()
     })
+
+    /* Play sound effect. */
+    this.sound.play('sfx_explosion')
 
     /* Add to the player's score. */
     this.p1Score += ship.points

@@ -48,5 +48,30 @@ class Menu extends Phaser.Scene {
         color: '#000'
       }
     ).setOrigin(0.5)
+
+    /* Define keys. */
+    keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
+    keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
+    keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
+    keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
+  }
+
+  update () {
+    if (Phaser.Input.Keyboard.JustDown(keyLeft)) {
+      game.settings = {
+        spaceshipSpeed: 3 * 60 / 1000,
+        gameTimer: 60000
+      }
+      this.sound.play('sfx_select')
+      this.scene.start('playScene')
+    }
+    if (Phaser.Input.Keyboard.JustDown(keyRight)) {
+      game.settings = {
+        spaceshipSpeed: 4 * 60 / 1000,
+        gameTimer: 45000
+      }
+      this.sound.play('sfx_select')
+      this.scene.start('playScene')
+    }
   }
 }

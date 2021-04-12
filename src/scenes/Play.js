@@ -92,7 +92,7 @@ class Play extends Phaser.Scene {
       0xFFFFFF
     ).setOrigin(0, 0)
 
-    /* Define scenes. */
+    /* Define keys. */
     keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
     keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
     keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
@@ -136,7 +136,7 @@ class Play extends Phaser.Scene {
 
     /* 60-second play clock. */
     scoreConfig.fixedWidth = 0;
-    this.clock = this.time.delayedCall(60000, () => {
+    this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
       this.add.text(
         game.config.width/2,
         game.config.height/2,
@@ -146,7 +146,7 @@ class Play extends Phaser.Scene {
       this.add.text(
         game.config.width/2,
         game.config.height/2 + 64,
-        'Press (R) to Restart',
+        'Press (R) to Restart or ← for Menu',
         scoreConfig
       ).setOrigin(0.5);
       this.gameOver = true
@@ -170,11 +170,16 @@ class Play extends Phaser.Scene {
           this.shipExplode(x)
         }
       })
-    }
+    } else {
+      /* Restart the scene if R is pressed. */
+      if (Phaser.Input.Keyboard.JustDown(keyR)) {
+        this.scene.restart()
+      }
 
-    /* Restart the scene if R is pressed. */
-    if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
-      this.scene.restart()
+      /* Go back to the menu if left is pressed. */
+      if (Phaser.Input.Keyboard.JustDown(keyLeft)) {
+        this.scene.start('menuScene')
+      }
     }
   }
 

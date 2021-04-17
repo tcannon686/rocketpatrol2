@@ -246,5 +246,11 @@ class Play extends Phaser.Scene {
     /* Add to the player's score. */
     this.p1Score += ship.points
     this.scoreLeft.text = this.p1Score
+    
+    /* Increase the amount of time left based on the ship point value. */
+    this.clock += ship.points / 5
+
+    /* Update clock UI. */
+    this.clockText.text = clockText(this.clock)
   }
 }

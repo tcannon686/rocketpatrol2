@@ -139,22 +139,45 @@ class Play extends Phaser.Scene {
     this.gameOver = false
 
     /* 60-second play clock. */
-    scoreConfig.fixedWidth = 0
-    this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-      this.add.text(
-        game.config.width / 2,
-        game.config.height / 2,
-        'GAME OVER',
-        scoreConfig
-      ).setOrigin(0.5)
-      this.add.text(
-        game.config.width / 2,
-        game.config.height / 2 + 64,
-        'Press (R) to Restart or ← for Menu',
-        scoreConfig
-      ).setOrigin(0.5)
-      this.gameOver = true
-    }, null, this)
+    this.clock = Math.floor(game.settings.gameTimer / 1000)
+
+    const clockTextConfig = {
+      ...scoreConfig,
+      align: 'center'
+    }
+
+    /* Time remaining. */
+    this.clockText = this.add.text(
+      game.config.width / 2,
+      borderUISize + borderPadding * 2,
+      clockText(this.clock),
+      clockTextConfig
+    ).setOrigin(0.5, 0)
+
+    const gameOverConfig = { ...scoreConfig, fixedWidth: 0 }
+
+    const handleSecondElapsed = () => {
+      this.clock--
+      this.clockText.text = clockText(this.clock)
+      if (this.clock === 0) {
+        this.add.text(
+          game.config.width / 2,
+          game.config.height / 2,
+          'GAME OVER',
+          gameOverConfig
+        ).setOrigin(0.5)
+        this.add.text(
+          game.config.width / 2,
+          game.config.height / 2 + 64,
+          'Press (R) to Restart or ← for Menu',
+          gameOverConfig
+        ).setOrigin(0.5)
+        this.gameOver = true
+      } else {
+        this.time.delayedCall(1000, handleSecondElapsed, null, this)
+      }
+    }
+    this.time.delayedCall(1000, handleSecondElapsed, null, this)
   }
 
   update (t, dt) {

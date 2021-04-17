@@ -9,6 +9,8 @@ class Play extends Phaser.Scene {
       .image('rocket', 'assets/rocket.png')
       .image('spaceship', 'assets/spaceship.png')
       .image('starfield', 'assets/starfield.png')
+      .image('mountains1', 'assets/mountains1.png')
+      .image('mountains2', 'assets/mountains2.png')
       .spritesheet('explosion', 'assets/explosion.png', {
         frameWidth: 64,
         frameHeight: 32,
@@ -25,9 +27,11 @@ class Play extends Phaser.Scene {
 
   create () {
     /* Place starfield. */
-    this.starfield = this.add
-      .tileSprite(0, 0, 640, 480, 'starfield')
-      .setOrigin(0, 0)
+    this.backgrounds = [
+      this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0),
+      this.add.tileSprite(0, 0, 640, 480, 'mountains1').setOrigin(0, 0),
+      this.add.tileSprite(0, 0, 640, 480, 'mountains2').setOrigin(0, 0)
+    ]
 
     /* Create the players. */
     this.p1Rocket = new Rocket(
@@ -154,7 +158,9 @@ class Play extends Phaser.Scene {
   }
 
   update (t, dt) {
-    this.starfield.tilePositionX -= dt * starSpeed
+    this.backgrounds.forEach((x, i) => {
+      x.tilePositionX -= dt * starSpeed * (i + 1)
+    })
 
     if (!this.gameOver) {
       /* Update the rocket. */

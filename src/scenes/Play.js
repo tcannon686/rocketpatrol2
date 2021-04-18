@@ -22,11 +22,24 @@ class Play extends Phaser.Scene {
     /* Load audio. */
     this.load
       .audio('sfx_select', 'assets/blip_select12.wav')
-      .audio('sfx_explosion', 'assets/explosion38.wav')
+      .audio('sfx_explosion0', 'assets/explode1.wav')
+      .audio('sfx_explosion1', 'assets/explode2.wav')
+      .audio('sfx_explosion2', 'assets/explode3.wav')
+      .audio('sfx_explosion3', 'assets/explode4.wav')
       .audio('sfx_rocket', 'assets/rocket_shot.wav')
+      .audio('music', 'assets/music.mp3')
   }
 
   create () {
+    if (!this.music) {
+      this.music = this.sound.add('music', {
+        loop: true,
+        volume: 0.5
+      })
+      /* Play music. */
+      this.music.play()
+    }
+
     /* Place starfield. */
     this.backgrounds = [
       this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0),
@@ -105,17 +118,6 @@ class Play extends Phaser.Scene {
     keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
     keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
     keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
-
-    /* Configure animation. */
-    this.anims.create({
-      key: 'explode',
-      frames: this.anims.generateFrameNumbers('explosion', {
-        start: 0,
-        end: 9,
-        first: 0
-      }),
-      frameRate: 30
-    })
 
     /* Initialize score. */
     this.p1Score = 0
@@ -262,7 +264,7 @@ class Play extends Phaser.Scene {
     )
 
     /* Play sound effect. */
-    this.sound.play('sfx_explosion')
+    this.sound.play('sfx_explosion' + Math.floor(Math.random() * 4))
 
     /* Add to the player's score. */
     this.p1Score += ship.points

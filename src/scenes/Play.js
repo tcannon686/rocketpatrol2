@@ -11,6 +11,7 @@ class Play extends Phaser.Scene {
       .image('starfield', 'assets/starfield.png')
       .image('mountains1', 'assets/mountains1.png')
       .image('mountains2', 'assets/mountains2.png')
+      .image('soft', 'assets/soft.png')
       .spritesheet('explosion', 'assets/explosion.png', {
         frameWidth: 64,
         frameHeight: 32,
@@ -146,6 +147,19 @@ class Play extends Phaser.Scene {
       align: 'center'
     }
 
+    /* Clock particle. */
+    const clockParticles = this.add.particles('soft')
+    this.clockEmitter = clockParticles.createEmitter({
+      tint: 0xffaa00,
+      lifespan: 1000,
+      maxParticles: 100,
+      frequency: -1,
+      radial: true,
+      blendMode: Phaser.BlendModes.ADD,
+      speed: { min: 32, max: 128 },
+      scale: { start: 1, end: 0 },
+      alpha: { start: 1, end: 0 }
+    });
     /* Time remaining. */
     this.clockText = this.add.text(
       game.config.width / 2,
@@ -252,5 +266,11 @@ class Play extends Phaser.Scene {
 
     /* Update clock UI. */
     this.clockText.text = clockText(this.clock)
+
+    this.clockEmitter.explode(
+      25, 
+      game.config.width / 2,
+      borderUISize + borderPadding * 2 + 16,
+    )
   }
 }

@@ -119,6 +119,15 @@ class Play extends Phaser.Scene {
     keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
     keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
 
+    /* Add mouse handling. */
+    this.input.on(Phaser.Input.Events.POINTER_MOVE, (e) => {
+      this.p1Rocket.moveToX(e.position.x)
+    })
+
+    this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.p1Rocket.fire()
+    })
+
     /* Initialize score. */
     this.p1Score = 0
     const scoreConfig = {

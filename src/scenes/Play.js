@@ -34,6 +34,9 @@ class Play extends Phaser.Scene {
       this.add.tileSprite(0, 0, 640, 480, 'mountains2').setOrigin(0, 0)
     ]
 
+    /* Particles. */
+    this.explodeParticles = this.add.particles('soft')
+
     /* Create the players. */
     this.p1Rocket = new Rocket(
       this,
@@ -147,19 +150,6 @@ class Play extends Phaser.Scene {
       align: 'center'
     }
 
-    /* Clock particle. */
-    const clockParticles = this.add.particles('soft')
-    this.clockEmitter = clockParticles.createEmitter({
-      tint: 0xffaa00,
-      lifespan: 1000,
-      maxParticles: 100,
-      frequency: -1,
-      radial: true,
-      blendMode: Phaser.BlendModes.ADD,
-      speed: { min: 32, max: 128 },
-      scale: { start: 1, end: 0 },
-      alpha: { start: 1, end: 0 }
-    });
     /* Time remaining. */
     this.clockText = this.add.text(
       game.config.width / 2,
@@ -242,17 +232,34 @@ class Play extends Phaser.Scene {
     ship.alpha = 0
 
     /* Create explosion sprite at the ship's position. */
-    const boom = this.add.sprite(
-      ship.x,
-      ship.y,
-      'explosion'
-    ).setOrigin(0, 0)
-    boom.anims.play('explode')
-    boom.on('animationcomplete', () => {
-      ship.reset()
-      ship.alpha = 1
-      boom.destroy()
+
+    const config = {
+      lifespan: 500,
+      maxParticles: 20,
+      frequency: -1,
+      radial: true,
+      blendMode: Phaser.BlendModes.ADD,
+      alpha: { start: 1, end: 0 },
+      scale: { min: 0.5, max: 1, end: 2.0 },
+      speedX: { min: -256, max: 128 },
+      speedY: { min: -128, max: 128 }
+    }
+    const explosion = this.explodeParticles.createEmitter({
+      ...config,
+      tint: 0xff00ff,
+      deathCallback: () => {
+        if (explosion.getAliveParticleCount() === 0) {
+          this.explodeParticles.removeEmitter(explosion)
+          ship.reset()
+          ship.alpha = 1
+        }
+      }
     })
+    explosion.explode(
+      config.maxParticles,
+      ship.x + ship.width / 2,
+      ship.y + ship.height / 2
+    )
 
     /* Play sound effect. */
     this.sound.play('sfx_explosion')
@@ -266,11 +273,5 @@ class Play extends Phaser.Scene {
 
     /* Update clock UI. */
     this.clockText.text = clockText(this.clock)
-
-    this.clockEmitter.explode(
-      25, 
-      game.config.width / 2,
-      borderUISize + borderPadding * 2 + 16,
-    )
   }
 }

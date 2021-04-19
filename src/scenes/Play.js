@@ -7,16 +7,15 @@ class Play extends Phaser.Scene {
     /* Load images/tile sprites. */
     this.load
       .image('rocket', 'assets/rocket.png')
-      .image('spaceship', 'assets/spaceship.png')
       .image('starfield', 'assets/starfield.png')
       .image('mountains1', 'assets/mountains1.png')
       .image('mountains2', 'assets/mountains2.png')
       .image('soft', 'assets/soft.png')
-      .spritesheet('explosion', 'assets/explosion.png', {
+      .spritesheet('asteroid', 'assets/asteroid.png', {
         frameWidth: 64,
-        frameHeight: 32,
+        frameHeight: 64,
         startFrame: 0,
-        endFrame: 9
+        endFrame: 18
       })
 
     /* Load audio. */
@@ -31,6 +30,19 @@ class Play extends Phaser.Scene {
   }
 
   create () {
+
+    /* Setup animations. */
+    this.anims.create({
+      key: 'asteroid',
+      frames: this.anims.generateFrameNumbers('asteroid', {
+        start: 0,
+        end: 18,
+        first: 0
+      }),
+      repeat: -1,
+      frameRate: 10
+    })
+    /* Setup music. */
     if (!this.music) {
       this.music = this.sound.add('music', {
         loop: true,
@@ -54,7 +66,7 @@ class Play extends Phaser.Scene {
     this.p1Rocket = new Rocket(
       this,
       game.config.width / 2,
-      game.config.height - borderUISize - borderPadding,
+      game.config.height - borderUISize - borderPadding - 48,
       'rocket',
       0
     ).setOrigin(0.5, 0)
@@ -62,14 +74,19 @@ class Play extends Phaser.Scene {
     /* Create the spaceships. */
     this.ships = []
     for (let i = 0; i < 3; i++) {
-      this.ships.push(new Spaceship(
+      const asteroid = new Spaceship(
         this,
         game.config.width + borderUISize * (6 - 3 * i),
         borderUISize * 4 + (borderUISize + borderPadding) * i,
-        'spaceship',
+        'asteroid',
         0,
         30 - i * 10
-      ).setOrigin(0, 0))
+      ).setOrigin(0, 0)
+      this.ships.push(asteroid)
+      asteroid.anims.play({
+        key: 'asteroid',
+        startFrame: Math.floor(Math.random() * 18)
+      })
     }
 
     /* Create green UI background. */
@@ -242,22 +259,18 @@ class Play extends Phaser.Scene {
     /* Temporarily hide the ship. */
     ship.alpha = 0
 
-    /* Create explosion sprite at the ship's position. */
-
+    /* Create explosion particles at the ship's position. */
     const config = {
+      tint: 0xff1100,
       lifespan: 500,
-      maxParticles: 20,
+      maxParticles: 32,
       frequency: -1,
       radial: true,
       blendMode: Phaser.BlendModes.ADD,
       alpha: { start: 1, end: 0 },
       scale: { min: 0.5, max: 1, end: 2.0 },
       speedX: { min: -256, max: 128 },
-      speedY: { min: -128, max: 128 }
-    }
-    const explosion = this.explodeParticles.createEmitter({
-      ...config,
-      tint: 0xff00ff,
+      speedY: { min: -128, max: 128 },
       deathCallback: () => {
         if (explosion.getAliveParticleCount() === 0) {
           this.explodeParticles.removeEmitter(explosion)
@@ -265,7 +278,8 @@ class Play extends Phaser.Scene {
           ship.alpha = 1
         }
       }
-    })
+    }
+    const explosion = this.explodeParticles.createEmitter(config)
     explosion.explode(
       config.maxParticles,
       ship.x + ship.width / 2,

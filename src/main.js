@@ -18,3 +18,8 @@ const starSpeed = 0.1
 
 /* Reserve keyboard bindings. */
 let keyF, keyLeft, keyRight, keyR
+
+/* Remove context menu. */
+document.addEventListener('contextmenu', (e) => {
+  e.preventDefault()
+})

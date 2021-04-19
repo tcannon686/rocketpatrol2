@@ -1,77 +1,56 @@
 class Menu extends Phaser.Scene {
   constructor () {
     super('menuScene')
+    this.easySettings = {
+      spaceshipSpeed: 3 * 60 / 1000,
+      gameTimer: 60000
+    }
+    this.hardSettings = {
+      spaceshipSpeed: 4 * 60 / 1000,
+      gameTimer: 45000
+    }
   }
 
   preload () {
+    /* Load images. */
+    this.load
+      .image('mainmenu', 'assets/mainmenu.png')
     /* Load audio. */
     this.load
       .audio('sfx_select', 'assets/blip_select12.wav')
   }
 
   create () {
-    /* Menu text config. */
-    const menuConfig = {
-      fontFamily: 'Courier',
-      fontSize: '28px',
-      backgroundColor: '#f3b141',
-      color: '#843605',
-      align: 'right',
-      padding: {
-        top: 5,
-        bottom: 5
-      },
-      fixedWidth: 0
-    }
-
-    this.add.text(
-      game.config.width / 2,
-      game.config.height / 2 - borderUISize - borderPadding,
-      'ROCKET PATROL',
-      menuConfig
-    ).setOrigin(0.5)
-
-    this.add.text(
-      game.config.width / 2,
-      game.config.height / 2,
-      'Use ←→ arrows to move & (F) to fire',
-      menuConfig
-    ).setOrigin(0.5)
-
-    this.add.text(
-      game.config.width / 2,
-      game.config.height / 2 + borderUISize + borderPadding,
-      'Press ← for Novice or → for Expert',
-      {
-        ...menuConfig,
-        backgroundColor: '#00ff00',
-        color: '#000'
-      }
-    ).setOrigin(0.5)
+    this.add.image(0, 0, 'mainmenu').setOrigin(0, 0)
 
     /* Define keys. */
     keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
     keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
     keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
     keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
+
+    /* Handle mouse. */
+    this.input.on(Phaser.Input.Events.POINTER_DOWN, (e) => {
+      if (e.button === 0) {
+        this.select(this.easySettings)
+      } else if (e.button === 2) {
+        this.select(this.hardSettings)
+      }
+    })
+  }
+
+  select (settings) {
+    game.settings = settings
+    this.sound.play('sfx_select')
+    this.scene.start('playScene')
   }
 
   update () {
     if (Phaser.Input.Keyboard.JustDown(keyLeft)) {
-      game.settings = {
-        spaceshipSpeed: 3 * 60 / 1000,
-        gameTimer: 60000
-      }
-      this.sound.play('sfx_select')
-      this.scene.start('playScene')
+      this.select(this.easySettings)
     }
     if (Phaser.Input.Keyboard.JustDown(keyRight)) {
-      game.settings = {
-        spaceshipSpeed: 4 * 60 / 1000,
-        gameTimer: 45000
-      }
-      this.sound.play('sfx_select')
-      this.scene.start('playScene')
+      this.select(this.hardSettings)
     }
   }
 }

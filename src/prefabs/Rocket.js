@@ -5,10 +5,28 @@ class Rocket extends Phaser.GameObjects.Sprite {
   constructor (scene, x, y, texture, frame) {
     super(scene, x, y, texture, frame)
 
-    scene.add.existing(this)
     this.sfxRocket = scene.sound.add('sfx_rocket')
     this.isFiring = false
     this.moveSpeed = 2 * 60 / 1000
+
+    /* Particles. */
+    this.explodeParticles = scene.add.particles('soft')
+    const config = {
+      tint: 0xff1100,
+      lifespan: 250,
+      maxParticles: 1000,
+      frequency: 0,
+      radial: true,
+      angle: { min: 70, max: 110 },
+      blendMode: Phaser.BlendModes.ADD,
+      alpha: { start: 1, end: 0 },
+      scale: { min: 0.5, max: 1, end: 2.0 },
+      speed: { min: 128, max: 256 },
+      follow: this,
+      followOffset: { x: 0, y: 64 }
+    }
+    this.explodeParticles.createEmitter(config)
+    scene.add.existing(this)
   }
 
   moveToX (x) {

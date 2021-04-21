@@ -20,10 +20,10 @@ class Rocket extends Phaser.GameObjects.Sprite {
       angle: { min: 70, max: 110 },
       blendMode: Phaser.BlendModes.ADD,
       alpha: { start: 1, end: 0 },
-      scale: { min: 0.5, max: 1, end: 2.0 },
+      scale: { min: 0.25, max: 0.5, end: 1.0 },
       speed: { min: 128, max: 256 },
       follow: this,
-      followOffset: { x: 0, y: 64 }
+      followOffset: { x: 0, y: 32 }
     }
     this.explodeParticles.createEmitter(config)
     scene.add.existing(this)
@@ -85,7 +85,7 @@ class Rocket extends Phaser.GameObjects.Sprite {
   }
 
   reset () {
-    this.y = game.config.height - borderUISize - borderPadding - 48
+    this.y = game.config.height - borderUISize - borderPadding - 24
     this.isFiring = false
   }
 }

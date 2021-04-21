@@ -17,7 +17,7 @@ class Menu extends Phaser.Scene {
       .image('mainmenu', 'assets/mainmenu.png')
     /* Load audio. */
     this.load
-      .audio('sfx_select', 'assets/blip_select12.wav')
+      .audio('sfx_select', 'assets/select.wav')
   }
 
   create () {
